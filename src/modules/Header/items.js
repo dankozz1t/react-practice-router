@@ -3,6 +3,11 @@ import { nanoid } from 'nanoid';
 const headerItems = [
   {
     id: nanoid(),
+    to: '/characters',
+    text: 'Characters',
+  },
+  {
+    id: nanoid(),
     to: '/',
     text: 'Home',
   },
