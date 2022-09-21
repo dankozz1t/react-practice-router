@@ -5,11 +5,28 @@ import { api } from 'shared/service/api.service';
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadMore, setIsLoadMore] = useState(true);
+  const [totalPage, setTotalPage] = useState(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(searchParams.get('page') ?? 1);
 
   useEffect(() => {
+    try {
+      api.fetchTotalPage().then(data => {
+        setTotalPage(data);
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (totalPage === page) {
+      setIsLoadMore(false);
+      return;
+    }
+
     setIsLoading(true);
     try {
       api
@@ -23,7 +40,7 @@ const ProductsPage = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }, [page]);
+  }, [page, totalPage]);
 
   const handleLoadMoreClick = () => {
     setSearchParams(page !== 1 ? { page } : {});
@@ -33,8 +50,8 @@ const ProductsPage = () => {
   if (!isLoading) {
     return <>Loadding...</>;
   }
-  console.log(products);
-  const elements = products.map(({ id, name, description }, index) => (
+
+  const elements = products.map(({ name, description }, index) => (
     <li key={index}>
       <h3>{name}</h3>
       <p>{description}</p>
@@ -47,9 +64,11 @@ const ProductsPage = () => {
       <ul style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
         {elements}
       </ul>
-      <button type="button" onClick={handleLoadMoreClick}>
-        Load more
-      </button>
+      {isLoadMore && (
+        <button type="button" onClick={handleLoadMoreClick}>
+          Load more
+        </button>
+      )}
     </>
   );
 };
