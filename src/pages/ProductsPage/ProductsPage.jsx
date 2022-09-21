@@ -48,7 +48,7 @@ const ProductsPage = () => {
   };
 
   if (!isLoading) {
-    return <>Loadding...</>;
+    return <>Loading...</>;
   }
 
   const elements = products.map(({ name, description }, index) => (
