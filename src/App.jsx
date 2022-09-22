@@ -6,7 +6,7 @@ import ClientsRoutes from './ClientsRoutes';
 
 export const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/react-practice-router/">
       <Header />
       <ClientsRoutes />
     </BrowserRouter>
